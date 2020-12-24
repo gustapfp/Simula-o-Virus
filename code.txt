@@ -1,4 +1,4 @@
-mport turtle
+import turtle
 from random import randint
 
 turtle.tracer(0)  # programa para de atualizar a imagem do turtle toda hora
