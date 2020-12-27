@@ -23,13 +23,13 @@ class Poulacao:
         print(self.__grupo)
 
 
-        if self.__grupo == população_imune: # cinza
+        if self.__grupo is população_imune: # cinza
              cor_do_grupo = '#D3D3D3'            
-        elif self.__grupo == população_infectada: # vermelha
+        elif self.__grupo is população_infectada: # vermelha
             cor_do_grupo = '#FF0000'
-        elif self.__grupo == população_sucetivel_a_infeccao: # verde
+        elif self.__grupo is população_sucetivel_a_infeccao: # verde
             cor_do_grupo = '#008000'
-            
+         
             
            
         print(cor_do_grupo)       
