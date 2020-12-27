@@ -1,12 +1,17 @@
 import turtle
 from random import randint
 
+população_infectada = []
+população_imune = []
+população_sucetivel_a_infeccao = []
 class Poulacao:
-    def __init__(self, numero_de_pessoas, cor_do_grupo):
-        self.__numero_de_pessoas = numero_de_pessoas
-        self.__cor_do_grupo = cor_do_grupo
     
-    def cria_individuo(self, numero_de_pessoas, cor_do_grupo):
+    def __init__(self, numero_de_pessoas, grupo):
+        self.__numero_de_pessoas = numero_de_pessoas
+        self.__grupo = grupo
+
+    
+    def cria_individuo(self):
         '''
         cria os individuos de uma população
         numero_de_pessoas: numero de individuos a serem criados para essa população
@@ -15,32 +20,60 @@ class Poulacao:
                     vermelho => infectado
                     cinza => imune
         '''
-        individuos = {}
+        print(self.__grupo)
 
-        for i in range(numero_de_pessoas):
+
+        if self.__grupo == população_imune: # cinza
+             cor_do_grupo = '#D3D3D3'            
+        elif self.__grupo == população_infectada: # vermelha
+            cor_do_grupo = '#FF0000'
+        elif self.__grupo == população_sucetivel_a_infeccao: # verde
+            cor_do_grupo = '#008000'
+            
+            
+           
+        print(cor_do_grupo)       
+        
+        for i in range(self.__numero_de_pessoas):
             numero_alearotio_paraY = randint(-400, 400)
             numero_alearotio_paraX = randint(-600, 600)
-            individuos[i] = turtle.Turtle()
-            individuos[i].shape('circle')
-            individuos[i].color(cor_do_grupo)
-            individuos[i].penup()
-            individuos[i].setx(numero_alearotio_paraX)
-            individuos[i].sety(numero_alearotio_paraY)
+            self.__grupo.insert(i, turtle.Turtle())
+            self.__grupo[i].shape('circle')
+            self.__grupo[i].color(cor_do_grupo)
+            self.__grupo[i].penup()
+            self.__grupo[i].setx(numero_alearotio_paraX)
+            self.__grupo[i].sety(numero_alearotio_paraY)
+        return self.__grupo
     
-def tela_da_simulacao(modulo, tamanhox, tamanhoy, cor_da_tela):
-    '''
-    modulo: parametro para trazer o modulo turtle para dentro da função
-    tamanhox: tamanho na vertical da tela da simulação
-    tamanhoy: tamanha da horizontal do trla da simulação
-    cor_da_tela: cor do fundo da tela da simulação
-    '''
+    # def movimento_individuo(self):
+    #     for i in range(self.__numero_de_pessoas):
+    #         numero_alearotio = randint(-10, 10)
+    #         individuos[i].forward(numero_alearotio)
+class Simulação:
 
-    modulo.tracer(10) # Faz com que a tela seja atualizada toda hora
-    modulo.screensize(tamanhox, tamanhoy)
-    modulo.bgcolor(cor_da_tela)
+    def __init__(self, modulo):
+        self.__modulo = modulo
 
-tela_da_simulacao(turtle, 600, 400, 'black')
-cara = Poulacao(50, 'azul')
+    def tela_da_simulacao(self, tamanhox, tamanhoy, cor_da_tela):
+        '''
+        modulo: parametro para trazer o modulo turtle para dentro da função
+        tamanhox: tamanho na vertical da tela da simulação
+        tamanhoy: tamanha da horizontal do trla da simulação
+        cor_da_tela: cor do fundo da tela da simulação
+        '''
 
-cara.cria_individuo(50, 'blue')
-    
+        self.__modulo.tracer(10) # Faz com que a tela seja atualizada toda hora
+        self.__modulo.screensize(tamanhox, tamanhoy)
+        self.__modulo.bgcolor((str(cor_da_tela)))
+
+simulacao_virus = Simulação(turtle)
+simulacao_virus.tela_da_simulacao(600, 400, 'black')
+
+infectados = Poulacao(10, população_infectada)
+sucetiveis_a_doença = Poulacao(140, população_sucetivel_a_infeccao)
+
+
+weeks = 0
+sucetiveis_a_doença.cria_individuo()
+infectados.cria_individuo()
+
