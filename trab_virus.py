@@ -65,7 +65,24 @@ class Poulacao:
                 self.__grupo[i].sety(385)
             elif self.__grupo[i].ycor() < -385:
                 self.__grupo[i].sety(-385)      
-        
+    
+    def nasce_novo_individuo(self):
+        população_saudavel = int(len(população_imune)) + int(len(população_sucetivel_a_infeccao))
+        index_do_novo_individuo = int(len(self.__grupo) + 1)
+        if população_saudavel < 300:
+            chances_de_ter_um_filho = randint(0, 10)
+            if chances_de_ter_um_filho >= 9:
+                numero_alearotio_paraY = randint(-385, 385)
+                numero_alearotio_paraX = randint(-500, 500)
+                self.__grupo.insert(index_do_novo_individuo, turtle.Turtle())
+                self.__grupo[index_do_novo_individuo].shape('circle')
+                self.__grupo[index_do_novo_individuo].color(cor_do_grupo)
+                self.__grupo[index_do_novo_individuo].penup()
+                self.__grupo[index_do_novo_individuo].setx(numero_alearotio_paraX)
+                self.__grupo[index_do_novo_individuo].sety(numero_alearotio_paraY)
+
+
+
         
 
 class Simulação:
