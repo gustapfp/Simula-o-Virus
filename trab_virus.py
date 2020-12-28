@@ -1,15 +1,24 @@
 import turtle
 from random import randint
 
-população_infectada = []
-população_imune = []
-população_sucetivel_a_infeccao = []
+populacao_infectada = []
+populacao_imune = []
+populacao_sucetivel_a_infeccao = []
 
 class Poulacao:
     
     def __init__(self, numero_de_pessoas, grupo):
         self.__numero_de_pessoas = numero_de_pessoas
         self.__grupo = grupo
+
+    def seleciona_cor(self):
+        if self.__grupo is populacao_imune: # cinza
+             cor_do_grupo = '#D3D3D3'            
+        elif self.__grupo is populacao_infectada: # vermelha
+            cor_do_grupo = '#FF0000'
+        elif self.__grupo is populacao_sucetivel_a_infeccao: # verde
+            cor_do_grupo = '#008000'   
+        return cor_do_grupo
     
     def cria_individuo(self):
         
@@ -21,14 +30,8 @@ class Poulacao:
                     vermelho => infectado
                     cinza => imune
         '''
-
-        if self.__grupo is população_imune: # cinza
-             cor_do_grupo = '#D3D3D3'            
-        elif self.__grupo is população_infectada: # vermelha
-            cor_do_grupo = '#FF0000'
-        elif self.__grupo is população_sucetivel_a_infeccao: # verde
-            cor_do_grupo = '#008000'       
-        
+    
+        cor_do_grupo = self.seleciona_cor()
         turtle.tracer(0)
         for i in range(self.__numero_de_pessoas):
             numero_alearotio_paraY = randint(-385, 385)
@@ -42,7 +45,7 @@ class Poulacao:
         turtle.update()
         turtle.tracer(10)
         return self.__grupo
-    
+        
     def movimenta_individuo(self):
 
         turtle.tracer(0)
@@ -67,25 +70,35 @@ class Poulacao:
                 self.__grupo[i].sety(-385)      
     
     def nasce_novo_individuo(self):
-        população_saudavel = int(len(população_imune)) + int(len(população_sucetivel_a_infeccao))
-        index_do_novo_individuo = int(len(self.__grupo) + 1)
-        if população_saudavel < 300:
+        '''
+        A cada semana um individuo saudavel tem 10% chance de ter um novo filho
+        '''
+        populacao_saudavel = int(len(populacao_imune)) + int(len(populacao_sucetivel_a_infeccao))
+
+        if populacao_saudavel < 300:
             chances_de_ter_um_filho = randint(0, 10)
-            if chances_de_ter_um_filho >= 9:
+
+            if chances_de_ter_um_filho > 9:
+                index_do_novo_individuo = int(len(self.__grupo))                
                 numero_alearotio_paraY = randint(-385, 385)
                 numero_alearotio_paraX = randint(-500, 500)
+                cor_do_grupo = self.seleciona_cor()
                 self.__grupo.insert(index_do_novo_individuo, turtle.Turtle())
                 self.__grupo[index_do_novo_individuo].shape('circle')
                 self.__grupo[index_do_novo_individuo].color(cor_do_grupo)
                 self.__grupo[index_do_novo_individuo].penup()
                 self.__grupo[index_do_novo_individuo].setx(numero_alearotio_paraX)
                 self.__grupo[index_do_novo_individuo].sety(numero_alearotio_paraY)
+    
+    def colisao(self):
+        pass
 
+            
 
 
         
 
-class Simulação:
+class Simulacao:
 
     def __init__(self, modulo):
         self.__modulo = modulo
@@ -103,22 +116,24 @@ class Simulação:
         self.__modulo.bgcolor((str(cor_da_tela)))
         
 
-simulacao_virus = Simulação(turtle)
+simulacao_virus = Simulacao(turtle)
 simulacao_virus.tela_da_simulacao(600, 400, 'black')
 
-infectados = Poulacao(10, população_infectada)
-sucetiveis_a_doença = Poulacao(140, população_sucetivel_a_infeccao)
+infectados = Poulacao(10, populacao_infectada)
+sucetiveis_a_doença = Poulacao(190, populacao_sucetivel_a_infeccao)
 
 
 weeks = 0
 sucetiveis_a_doença.cria_individuo()
 infectados.cria_individuo()
 
-while weeks<100:
+while weeks<200:
     sucetiveis_a_doença.movimenta_individuo()
-    infectados.movimenta_individuo()
     sucetiveis_a_doença.limita_bordas()
+    sucetiveis_a_doença.nasce_novo_individuo()
+    infectados.movimenta_individuo()
     infectados.limita_bordas()
     weeks += 1
     print(weeks)
+    
 
