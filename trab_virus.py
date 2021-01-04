@@ -20,7 +20,7 @@ class Poulacao:
             cor_do_grupo = '#008000'   
         return cor_do_grupo
     
-    def cria_individuo(self):
+    def cria_individuo(self, quantidade_de_pessoas_a_serem_criadas):
         
         '''
         cria os individuos de uma população
@@ -33,7 +33,7 @@ class Poulacao:
     
         cor_do_grupo = self.seleciona_cor()
         turtle.tracer(0)
-        for i in range(self.__numero_de_pessoas):
+        for i in range(quantidade_de_pessoas_a_serem_criadas):
             numero_alearotio_paraY = randint(-385, 385)
             numero_alearotio_paraX = randint(-500, 500)
             self.__grupo.insert(i, turtle.Turtle())
@@ -45,21 +45,10 @@ class Poulacao:
         turtle.update()
         turtle.tracer(10)
         return self.__grupo
-        
-    def movimenta_individuo(self):
-
-        turtle.tracer(0)
-        for i in range(self.__numero_de_pessoas):
-            numero_aleatorio = randint(10, 15)
-            angulo_selecionado = randint(0, 360)
-            self.__grupo[i].rt(angulo_selecionado)
-            self.__grupo[i].fd(numero_aleatorio)
-        turtle.update()
-        turtle.tracer(10)
     
     def limita_bordas(self):
 
-        for i in range(self.__numero_de_pessoas):
+        for i in range(len(self.__grupo)):
             if self.__grupo[i].xcor() > 500:
                 self.__grupo[i].setx(500)
             elif self.__grupo[i].xcor() < -500:
@@ -89,14 +78,33 @@ class Poulacao:
                 self.__grupo[index_do_novo_individuo].penup()
                 self.__grupo[index_do_novo_individuo].setx(numero_alearotio_paraX)
                 self.__grupo[index_do_novo_individuo].sety(numero_alearotio_paraY)
-    
-    def colisao(self):
-        pass
 
-            
+    def movimenta_individuo(self):
 
-
+        turtle.tracer(0)
+        for i in range(len(self.__grupo)):
+            numero_aleatorio = randint(10, 15)
+            angulo_selecionado = randint(0, 360)
+            self.__grupo[i].rt(angulo_selecionado)
+            self.__grupo[i].fd(numero_aleatorio)
         
+        
+        turtle.update()
+        turtle.tracer(10)
+
+def transmite_virus(taxa_de_cotantaminacao):
+    for i in range(len(populacao_infectada)):
+        infectado_intervalo_cordernada_x = (populacao_infectada[i].xcor() + 15)
+        infectado_intervalo_cordenada_y = (populacao_infectada[i].ycor() + 15)
+        for j in range(len(populacao_sucetivel_a_infeccao)):
+            chance_de_ser_infectado = int(randint(0,10))
+            sucetivel_intervalo_cordenada_x = (populacao_sucetivel_a_infeccao[j].xcor() + 15)
+            sucetivel_intervalo_cordenada_y = (populacao_sucetivel_a_infeccao[j].ycor() + 15)
+            if infectado_intervalo_cordernada_x + taxa_de_cotantaminacao >= sucetivel_intervalo_cordenada_x - taxa_de_cotantaminacao and infectado_intervalo_cordernada_x - taxa_de_cotantaminacao <= sucetivel_intervalo_cordenada_x + taxa_de_cotantaminacao and infectado_intervalo_cordenada_y + taxa_de_cotantaminacao >= sucetivel_intervalo_cordenada_y - taxa_de_cotantaminacao and infectado_intervalo_cordenada_y - taxa_de_cotantaminacao <=sucetivel_intervalo_cordenada_y + taxa_de_cotantaminacao:
+                if chance_de_ser_infectado > 7:
+                    print('infectado')
+                    
+
 
 class Simulacao:
 
@@ -114,7 +122,7 @@ class Simulacao:
         self.__modulo.tracer(10) # Faz com que a tela seja atualizada toda hora
         self.__modulo.screensize(tamanhox, tamanhoy)
         self.__modulo.bgcolor((str(cor_da_tela)))
-        
+    
 
 simulacao_virus = Simulacao(turtle)
 simulacao_virus.tela_da_simulacao(600, 400, 'black')
@@ -124,16 +132,17 @@ sucetiveis_a_doença = Poulacao(190, populacao_sucetivel_a_infeccao)
 
 
 weeks = 0
-sucetiveis_a_doença.cria_individuo()
-infectados.cria_individuo()
+sucetiveis_a_doença.cria_individuo(190)
+infectados.cria_individuo(10)
 
-while weeks<200:
+while weeks<100:
     sucetiveis_a_doença.movimenta_individuo()
     sucetiveis_a_doença.limita_bordas()
     sucetiveis_a_doença.nasce_novo_individuo()
     infectados.movimenta_individuo()
     infectados.limita_bordas()
+    transmite_virus(20)
     weeks += 1
-    print(weeks)
+    #print(weeks)
     
 
