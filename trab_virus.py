@@ -67,28 +67,6 @@ class Populacao:
             elif self.__grupo[i].ycor() < -385:
                 self.__grupo[i].sety(-385)      
 
-    def movimenta_individuo(self):
-        """
-        Movimenta os individuos de forma aleatoria na simulação
-        """
-    
-
-        numero_de_pessoas = int(len(self.__grupo))
-
-        turtle.tracer(0)
-
-        x = 0 
-        while x < numero_de_pessoas:
-        # for x in numero_de_pessoas:
-            numero_aleatorio = randint(10, 15)
-            angulo_selecionado = randint(0, 360)
-            self.__grupo[x].rt(angulo_selecionado)
-            self.__grupo[x].fd(numero_aleatorio)
-            x += 1
-        turtle.update()       
-        
-        turtle.tracer(10)
-
  
 class Doentes(Populacao):
     def __init__(self, numero_de_pessoas, grupo):
@@ -139,6 +117,29 @@ class Doentes(Populacao):
     def movimenta_doente(self):
         pass
                    
+    def movimenta_individuo(self):
+        """
+        Movimenta os individuos de forma aleatoria na simulação
+        """
+
+
+        numero_de_pessoas = int(len(super().grupo))
+
+        turtle.tracer(0)
+
+        x = 0 
+        while x < numero_de_pessoas:
+        # for x in numero_de_pessoas:
+            numero_aleatorio = randint(10, 15)
+            angulo_selecionado = randint(0, 360)
+            super().grupo[x].rt(angulo_selecionado)
+            super().grupo[x].fd(numero_aleatorio)
+            x += 1
+        turtle.update()       
+        
+        turtle.tracer(10)
+
+
 class SucetivelInfeccao(Populacao):
     def __init__(self, numero_de_pessoas, grupo):
         super().__init__(numero_de_pessoas, grupo)
@@ -164,6 +165,28 @@ class SucetivelInfeccao(Populacao):
                 super().grupo[index_do_novo_individuo].penup()
                 super().grupo[index_do_novo_individuo].setx(numero_alearotio_paraX)
                 super().grupo[index_do_novo_individuo].sety(numero_alearotio_paraY)
+
+    def movimenta_individuo(self):
+        """
+        Movimenta os individuos de forma aleatoria na simulação
+        """
+    
+
+        numero_de_pessoas = int(len(super().grupo))
+
+        turtle.tracer(0)
+
+        x = 0 
+        while x < numero_de_pessoas:
+        # for x in numero_de_pessoas:
+            numero_aleatorio = randint(10, 15)
+            angulo_selecionado = randint(0, 360)
+            super().grupo[x].rt(angulo_selecionado)
+            super().grupo[x].fd(numero_aleatorio)
+            x += 1
+        turtle.update()       
+        
+        turtle.tracer(10)
 
 class Simulacao:
 
@@ -204,4 +227,3 @@ while weeks<100:
     infectados.transmite_virus(20)
     weeks += 1
     print(weeks)
-
