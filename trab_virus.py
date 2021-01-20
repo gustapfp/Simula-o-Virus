@@ -81,7 +81,6 @@ class Populacao:
             x += 1
         turtle.update()       
         
-        turtle.tracer(10)
     
     def limita_bordas(self):
         """
@@ -129,26 +128,11 @@ class Doentes(Populacao):
                 sucetivel_intervalo_cordenada_y = (populacao_sucetivel_a_infeccao[j].ycor() + 15)
                 
                 if infectado_intervalo_cordernada_x + taxa_de_cotantaminacao >= sucetivel_intervalo_cordenada_x - taxa_de_cotantaminacao and infectado_intervalo_cordernada_x - taxa_de_cotantaminacao <= sucetivel_intervalo_cordenada_x + taxa_de_cotantaminacao and infectado_intervalo_cordenada_y + taxa_de_cotantaminacao >= sucetivel_intervalo_cordenada_y - taxa_de_cotantaminacao and infectado_intervalo_cordenada_y - taxa_de_cotantaminacao <=sucetivel_intervalo_cordenada_y + taxa_de_cotantaminacao:
-                    populacao_sucetivel_a_infeccao[j].color('purple')
-                    # if chance_de_ser_infectado > 7:
-                    #     numero_de_pessoas_sucetiveis_a_doença -= 1 
-                    #     numero_de_pessoas_infectadas += 1
-
-                        
-                        #populacao_infectada.append(populacao_sucetivel_a_infeccao[i])
-                        #populacao_sucetivel_a_infeccao.remove(populacao_sucetivel_a_infeccao[j])
-                        
-                        
-                        # i += 1 # i para pessoas infectadas j para pessoas sucetiveis
-                        
-                        
-                        # print('eita to doente')
-                        # print(f'infecta: {numero_de_pessoas_infectadas}')
-                # sucetiveis_a_doença.movimenta_individuo()
-                # infectados.movimenta_individuo()
-                        
+                    if chance_de_ser_infectado > 7:
+                        populacao_sucetivel_a_infeccao[j].color('purple')    
+                    # sprint(populacao_sucetivel_a_infeccao[j].color())                    
                 j += 1
-                
+            i += 1    
             x += 1 
 
  
@@ -179,6 +163,37 @@ class SucetivelInfeccao(Populacao):
                 super().grupo[index_do_novo_individuo].penup()
                 super().grupo[index_do_novo_individuo].setx(numero_alearotio_paraX)
                 super().grupo[index_do_novo_individuo].sety(numero_alearotio_paraY) 
+    
+    def se_esta_infectado_infecta_outros(self, taxa_de_cotantaminacao):
+        numero_de_pessoas_sucetiveis_a_doença = int(len(populacao_sucetivel_a_infeccao)) # numero de pessoas que podem ser infectadas
+
+        i = -1
+        x = 0
+
+        while x <= numero_de_pessoas_sucetiveis_a_doença:
+
+            sucetivel_intervalo_cordenada_x1 = (populacao_sucetivel_a_infeccao[i].xcor() + 15)
+            sucetivel_intervalo_cordenada_y1 = (populacao_sucetivel_a_infeccao[i].ycor() + 15)
+                
+            j = 0 #  variavel indexadora para usar no segundo loop
+
+            while j < numero_de_pessoas_sucetiveis_a_doença: # verifica todos os elementos da lista e ve se um dos individuos infectados está encostando em um individuo sucetivel a infecção 
+                
+                chance_de_ser_infectado = int(randint(0,10))
+                sucetivel_intervalo_cordenada_x2 = (populacao_sucetivel_a_infeccao[j].xcor() + 15)
+                sucetivel_intervalo_cordenada_y2 = (populacao_sucetivel_a_infeccao[j].ycor() + 15)
+                
+                if sucetivel_intervalo_cordenada_x1 + taxa_de_cotantaminacao >= sucetivel_intervalo_cordenada_x2 - taxa_de_cotantaminacao and sucetivel_intervalo_cordenada_x1 - taxa_de_cotantaminacao <= sucetivel_intervalo_cordenada_x2 + taxa_de_cotantaminacao and sucetivel_intervalo_cordenada_y1 + taxa_de_cotantaminacao >= sucetivel_intervalo_cordenada_y2 - taxa_de_cotantaminacao and sucetivel_intervalo_cordenada_y1 - taxa_de_cotantaminacao <= sucetivel_intervalo_cordenada_y2 + taxa_de_cotantaminacao:
+                    cor_do_individuo = populacao_sucetivel_a_infeccao[j].color()
+                    # print(cor_do_individuo)
+                    if cor_do_individuo == ("purple", "purple"):
+                        print("AAAAAAAAAAAAAAAAAAAAAAAH")
+                        populacao_sucetivel_a_infeccao[j].color('orange')                        
+                j += 1
+            x += 1 
+
+
+
 
 class Simulacao:
 
@@ -214,6 +229,7 @@ while weeks<100:
     sucetiveis_a_doença.movimenta_individuo()
     sucetiveis_a_doença.limita_bordas()
     sucetiveis_a_doença.nasce_novo_individuo()
+    sucetiveis_a_doença.se_esta_infectado_infecta_outros(20)
 
     infectados.movimenta_individuo()
     infectados.limita_bordas()
