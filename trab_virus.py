@@ -10,11 +10,9 @@ class Populacao:
     def __init__(self, numero_de_pessoas, grupo):
         self.__numero_de_pessoas = numero_de_pessoas
         self.__grupo = grupo
-    @property
-    def grupo(self):
-        return self.__grupo
-
-
+        
+    # getter e setter precisam ser adicionados
+    
     def seleciona_cor(self):
         '''
         Seleciona a cor do indiviudo irá aparecer na simulaçao
@@ -23,13 +21,24 @@ class Populacao:
                     cinza => imune
         '''
         if self.__grupo is populacao_imune: # cinza
-             cor_do_grupo = '#D3D3D3'            
+             cor_do_grupo = 'grey'# '#D3D3D3'            
         elif self.__grupo is populacao_infectada: # vermelha
-            cor_do_grupo = '#FF0000'
+            cor_do_grupo = 'red' # '#FF0000'
         elif self.__grupo is populacao_sucetivel_a_infeccao: # verde
-            cor_do_grupo = '#008000'   
+            cor_do_grupo ='green' # '#008000'   
         return cor_do_grupo
-    
+        
+    #
+    # def grupo_do_inviduo(self):
+    #     return self.__grupo
+    @property
+    def grupo(self):
+        return self.__grupo
+
+    @grupo.setter 
+    def grupo(self, grupo):
+        self.__grupo = grupo
+        
     def cria_individuo(self, quantidade_de_pessoas_a_serem_criadas):
         
         '''
@@ -51,6 +60,28 @@ class Populacao:
         turtle.update()
         turtle.tracer(10)
         return self.__grupo
+    
+    def movimenta_individuo(self):
+        """
+        Movimenta os individuos de forma aleatoria na simulação
+        """
+
+
+        numero_de_pessoas = int(len(self.__grupo))
+
+        turtle.tracer(0)
+
+        x = 0 
+        while x < numero_de_pessoas:
+
+            numero_aleatorio = randint(10, 15)
+            angulo_selecionado = randint(0, 360)
+            self.grupo[x].rt(angulo_selecionado)
+            self.grupo[x].fd(numero_aleatorio)
+            x += 1
+        turtle.update()       
+        
+        turtle.tracer(10)
     
     def limita_bordas(self):
         """
@@ -98,49 +129,32 @@ class Doentes(Populacao):
                 sucetivel_intervalo_cordenada_y = (populacao_sucetivel_a_infeccao[j].ycor() + 15)
                 
                 if infectado_intervalo_cordernada_x + taxa_de_cotantaminacao >= sucetivel_intervalo_cordenada_x - taxa_de_cotantaminacao and infectado_intervalo_cordernada_x - taxa_de_cotantaminacao <= sucetivel_intervalo_cordenada_x + taxa_de_cotantaminacao and infectado_intervalo_cordenada_y + taxa_de_cotantaminacao >= sucetivel_intervalo_cordenada_y - taxa_de_cotantaminacao and infectado_intervalo_cordenada_y - taxa_de_cotantaminacao <=sucetivel_intervalo_cordenada_y + taxa_de_cotantaminacao:
-                
-                    if chance_de_ser_infectado > 7:
-                        populacao_sucetivel_a_infeccao[j].color('#FF0000')
-                        populacao_sucetivel_a_infeccao.remove(populacao_sucetivel_a_infeccao[j])
-                        populacao_infectada.append(populacao_sucetivel_a_infeccao[i])
-                        numero_de_pessoas_sucetiveis_a_doença -= 1 
-                        numero_de_pessoas_infectadas += 1
-                        i += 1 
-                        print('eita to doente')
+                    populacao_sucetivel_a_infeccao[j].color('purple')
+                    # if chance_de_ser_infectado > 7:
+                    #     numero_de_pessoas_sucetiveis_a_doença -= 1 
+                    #     numero_de_pessoas_infectadas += 1
+
+                        
+                        #populacao_infectada.append(populacao_sucetivel_a_infeccao[i])
+                        #populacao_sucetivel_a_infeccao.remove(populacao_sucetivel_a_infeccao[j])
+                        
+                        
+                        # i += 1 # i para pessoas infectadas j para pessoas sucetiveis
+                        
+                        
+                        # print('eita to doente')
+                        # print(f'infecta: {numero_de_pessoas_infectadas}')
                 # sucetiveis_a_doença.movimenta_individuo()
                 # infectados.movimenta_individuo()
                         
                 j += 1
                 
             x += 1 
-    
-    def movimenta_doente(self):
-        pass
-                   
-    def movimenta_individuo(self):
-        """
-        Movimenta os individuos de forma aleatoria na simulação
-        """
 
-
-        numero_de_pessoas = int(len(super().grupo))
-
-        turtle.tracer(0)
-
-        x = 0 
-        while x < numero_de_pessoas:
-        # for x in numero_de_pessoas:
-            numero_aleatorio = randint(10, 15)
-            angulo_selecionado = randint(0, 360)
-            super().grupo[x].rt(angulo_selecionado)
-            super().grupo[x].fd(numero_aleatorio)
-            x += 1
-        turtle.update()       
-        
-        turtle.tracer(10)
-
+ 
 
 class SucetivelInfeccao(Populacao):
+
     def __init__(self, numero_de_pessoas, grupo):
         super().__init__(numero_de_pessoas, grupo)
 
@@ -164,29 +178,7 @@ class SucetivelInfeccao(Populacao):
                 super().grupo[index_do_novo_individuo].color(cor_do_grupo)
                 super().grupo[index_do_novo_individuo].penup()
                 super().grupo[index_do_novo_individuo].setx(numero_alearotio_paraX)
-                super().grupo[index_do_novo_individuo].sety(numero_alearotio_paraY)
-
-    def movimenta_individuo(self):
-        """
-        Movimenta os individuos de forma aleatoria na simulação
-        """
-    
-
-        numero_de_pessoas = int(len(super().grupo))
-
-        turtle.tracer(0)
-
-        x = 0 
-        while x < numero_de_pessoas:
-        # for x in numero_de_pessoas:
-            numero_aleatorio = randint(10, 15)
-            angulo_selecionado = randint(0, 360)
-            super().grupo[x].rt(angulo_selecionado)
-            super().grupo[x].fd(numero_aleatorio)
-            x += 1
-        turtle.update()       
-        
-        turtle.tracer(10)
+                super().grupo[index_do_novo_individuo].sety(numero_alearotio_paraY) 
 
 class Simulacao:
 
@@ -222,8 +214,10 @@ while weeks<100:
     sucetiveis_a_doença.movimenta_individuo()
     sucetiveis_a_doença.limita_bordas()
     sucetiveis_a_doença.nasce_novo_individuo()
+
     infectados.movimenta_individuo()
     infectados.limita_bordas()
     infectados.transmite_virus(20)
+    
     weeks += 1
-    print(weeks)
+    # print(weeks)
