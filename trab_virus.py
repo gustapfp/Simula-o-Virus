@@ -5,15 +5,15 @@ populacao_infectada = []
 populacao_imune = []
 populacao_sucetivel_a_infeccao = []
 
-controle_de_semanas_sucetivel = []
-controle_de_semanas_infectado = []
+controle_de_status_sucetivel = []
+controle_de_status_infectado = []
 
 class Populacao:
     
-    def __init__(self, numero_de_pessoas, grupo, controla_semanas):
+    def __init__(self, numero_de_pessoas, grupo, controla_status):
         self.__numero_de_pessoas = numero_de_pessoas
         self.__grupo = grupo
-        self.controla_semanas = controla_semanas
+        self.controla_status = controla_status
         
     # getter e setter precisam ser adicionados
     
@@ -43,7 +43,7 @@ class Populacao:
     def grupo(self, grupo):
         self.__grupo = grupo
         
-    def cria_individuo(self, quantidade_de_pessoas_a_serem_criadas):
+    def cria_individuo(self, quantidade_de_pessoas_a_serem_criadas, tipo):
         
         '''
         cria os individuos de uma população
@@ -61,12 +61,22 @@ class Populacao:
             self.__grupo[i].penup()
             self.__grupo[i].setx(numero_alearotio_paraX)
             self.__grupo[i].sety(numero_alearotio_paraY)
-            self.controla_semanas.insert(i, {})
-            self.controla_semanas[i]['dias_imune'] = 0
-            self.controla_semanas[i]['dias_infectado'] = 0
+            self.controla_status.insert(i, {})
+            self.controla_status[i]['dias_imune'] = 0
+            self.controla_status[i]['dias_infectado'] = 0
+
+            # # 1 = imune
+            # # 2 = Sucetivel a doença
+            # # 3 = doente
+            # if str(tipo) == 'sucetivel_a_doença':
+            #     self.controla_status[i]['estado'] = 1 # 1 = imune
+           
+
+            # else:
+            #     self.controla_status[i]['estado'] = 3 # 3 = doente
         turtle.update()
         turtle.tracer(10)
-        return self.__grupo
+        return self.__grupo, self.controla_status
     
     def movimenta_individuo(self):
         """
@@ -103,19 +113,38 @@ class Populacao:
                 self.__grupo[i].sety(385)
             elif self.__grupo[i].ycor() < -385:
                 self.__grupo[i].sety(-385)
+            
 
-    def check_imunidade(self):
-        for i in range(len(self.controla_semanas)):
-            self.controla_semanas[i]['dias_imune'] += 1
-            if self.controla_semanas[i]['dias_imune']  > 50:
-                pass
+    def check_estado_do_individuo(self):
+
+        for i in range(len(self.controla_status)):
+            cor_do_individuo = self.__grupo[i].color()
+            
+            # SE PERDEU A IMUNIDADE
+
+            if cor_do_individuo == ("grey", "grey"):  # se ele é cinza e esta imune
+                self.controla_status[i]['dias_imune'] += 1 # aumenta um dia
                 
+            
+            if self.controla_status[i]['dias_imune']  > 50 and  cor_do_individuo == ("grey", "grey"):  # se ele é cinza e ja passou do tempo de imunidade ele perde a imunidade e fica sucetivel a infecção
+                self.controla_status[i]['dias_imune'] = 0 
+                self.__grupo[i].color('green')     
+                
+                print('Perdeu imunidade')
+            
+            # SE FICOU CURADO DA DONEÇA
 
+            if cor_do_individuo == ("red", "red"): 
+                self.controla_status[i]['dias_infectado'] += 1
+
+            if self.controla_status[i]['dias_infectado']  > 75 and  cor_do_individuo == ("red", "red"):
+                 self.controla_status[i]['dias_infectado'] = 0
+                 self.__grupo[i].color('grey')
 
  
 class Doentes(Populacao):
-    def __init__(self, numero_de_pessoas, grupo, controla_semanas):
-        super().__init__(numero_de_pessoas, grupo, controla_semanas)
+    def __init__(self, numero_de_pessoas, grupo, controla_status):
+        super().__init__(numero_de_pessoas, grupo, controla_status)
 
     def transmite_virus(self, taxa_de_cotantaminacao):
 
@@ -143,7 +172,9 @@ class Doentes(Populacao):
                 sucetivel_intervalo_cordenada_y = (populacao_sucetivel_a_infeccao[j].ycor() + 15)
                 
                 if infectado_intervalo_cordernada_x + taxa_de_cotantaminacao >= sucetivel_intervalo_cordenada_x - taxa_de_cotantaminacao and infectado_intervalo_cordernada_x - taxa_de_cotantaminacao <= sucetivel_intervalo_cordenada_x + taxa_de_cotantaminacao and infectado_intervalo_cordenada_y + taxa_de_cotantaminacao >= sucetivel_intervalo_cordenada_y - taxa_de_cotantaminacao and infectado_intervalo_cordenada_y - taxa_de_cotantaminacao <=sucetivel_intervalo_cordenada_y + taxa_de_cotantaminacao:
-                    if chance_de_ser_infectado > 7:
+                    cor_transmisor_virus = populacao_infectada[i].color()
+                    cor_receptor_virus = populacao_sucetivel_a_infeccao[j].color()
+                    if chance_de_ser_infectado > 7 and cor_transmisor_virus == ("red", "red") and  cor_receptor_virus == ("green", "green"):
                         populacao_sucetivel_a_infeccao[j].color('red')    
                     # sprint(populacao_sucetivel_a_infeccao[j].color())                    
                 j += 1
@@ -154,8 +185,8 @@ class Doentes(Populacao):
 
 class SucetivelInfeccao(Populacao):
 
-    def __init__(self, numero_de_pessoas, grupo, controla_semanas):
-        super().__init__(numero_de_pessoas, grupo, controla_semanas)
+    def __init__(self, numero_de_pessoas, grupo, controla_status):
+        super().__init__(numero_de_pessoas, grupo, controla_status)
 
     def nasce_novo_individuo(self):
 
@@ -178,9 +209,9 @@ class SucetivelInfeccao(Populacao):
                 super().grupo[index_do_novo_individuo].penup()
                 super().grupo[index_do_novo_individuo].setx(numero_alearotio_paraX)
                 super().grupo[index_do_novo_individuo].sety(numero_alearotio_paraY)
-                self.controla_semanas.insert(index_do_novo_individuo, {})
-                self.controla_semanas[index_do_novo_individuo]['dias_imune'] = 0
-                self.controla_semanas[index_do_novo_individuo]['dias_infectado'] = 0
+                self.controla_status.insert(index_do_novo_individuo, {})
+                self.controla_status[index_do_novo_individuo]['dias_imune'] = 0
+                self.controla_status[index_do_novo_individuo]['dias_infectado'] = 0
             
     def se_esta_infectado_infecta_outros(self, taxa_de_cotantaminacao):
         numero_de_pessoas_sucetiveis_a_doença = int(len(populacao_sucetivel_a_infeccao)) # numero de pessoas que podem ser infectadas
@@ -202,10 +233,11 @@ class SucetivelInfeccao(Populacao):
                 sucetivel_intervalo_cordenada_y2 = (populacao_sucetivel_a_infeccao[j].ycor() + 15)
                 
                 if sucetivel_intervalo_cordenada_x1 + taxa_de_cotantaminacao >= sucetivel_intervalo_cordenada_x2 - taxa_de_cotantaminacao and sucetivel_intervalo_cordenada_x1 - taxa_de_cotantaminacao <= sucetivel_intervalo_cordenada_x2 + taxa_de_cotantaminacao and sucetivel_intervalo_cordenada_y1 + taxa_de_cotantaminacao >= sucetivel_intervalo_cordenada_y2 - taxa_de_cotantaminacao and sucetivel_intervalo_cordenada_y1 - taxa_de_cotantaminacao <= sucetivel_intervalo_cordenada_y2 + taxa_de_cotantaminacao:
-                    cor_do_individuo = populacao_sucetivel_a_infeccao[j].color()
-                    if cor_do_individuo == ("red", "red"):
-                        if chance_de_ser_infectado > 7:
-                            populacao_sucetivel_a_infeccao[j].color('red')                        
+                    
+                    cor_transmisor_virus = populacao_sucetivel_a_infeccao[i].color()
+                    cor_receptor_virus = populacao_sucetivel_a_infeccao[j].color()
+                    if chance_de_ser_infectado > 7 and  cor_receptor_virus == ("green", "green") and cor_transmisor_virus == ("red", "red"):
+                       populacao_sucetivel_a_infeccao[j].color('red')                       
                 j += 1
             x += 1 
         
@@ -236,13 +268,13 @@ simulacao_virus = Simulacao(turtle)
     
 simulacao_virus.tela_da_simulacao(600, 400, 'black')
 
-infectados = Doentes(10, populacao_infectada, controle_de_semanas_infectado)
-sucetiveis_a_doença = SucetivelInfeccao(190, populacao_sucetivel_a_infeccao, controle_de_semanas_sucetivel)
+infectados = Doentes(10, populacao_infectada, controle_de_status_infectado)
+sucetiveis_a_doença = SucetivelInfeccao(190, populacao_sucetivel_a_infeccao, controle_de_status_sucetivel)
 
-
+# 
 weeks = 0
-sucetiveis_a_doença.cria_individuo(190)
-infectados.cria_individuo(10)
+sucetiveis_a_doença.cria_individuo(190, 'sucetivel_a_doença')
+infectados.cria_individuo(10, 'infectado')
 
 while weeks<100:
 
@@ -250,14 +282,15 @@ while weeks<100:
     sucetiveis_a_doença.limita_bordas()
     sucetiveis_a_doença.nasce_novo_individuo()
     sucetiveis_a_doença.se_esta_infectado_infecta_outros(20)
-    sucetiveis_a_doença.check_imunidade()
+    sucetiveis_a_doença.check_estado_do_individuo()
 
     infectados.movimenta_individuo()
     infectados.limita_bordas()
     infectados.transmite_virus(20)
-    infectados.check_imunidade()
+    infectados.check_estado_do_individuo()
     
     weeks += 1
-    print(f'semana: {weeks}')
-    if weeks < 50:
-        print(f'vivendo:{controle_de_semanas_sucetivel[weeks]}')
+    #print(f'semana: {weeks}')
+    # if weeks < len(populacao_infectada):
+    #     print(f"status: {controle_de_status_infectado[weeks]['estado']} ")
+   
