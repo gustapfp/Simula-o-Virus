@@ -127,10 +127,10 @@ class Populacao:
                 self.controla_status[i]['dias_infectado'] += 1
                 # SE ELE MORREU INFECTADO
                 chance_de_morrer_infectado = randint(0, 100)
-                if chance_de_morrer_infectado > 95:
+                if chance_de_morrer_infectado > 99:
                     self.__grupo[i].ht()
 
-            if self.controla_status[i]['dias_infectado']  > 75 and  cor_do_individuo == ("red", "red"):
+            if self.controla_status[i]['dias_infectado']  > 50 and  cor_do_individuo == ("red", "red"):
                  self.controla_status[i]['dias_infectado'] = 0
                  self.__grupo[i].color('grey')
 
@@ -167,7 +167,7 @@ class Doentes(Populacao):
                 if infectado_intervalo_cordernada_x + taxa_de_cotantaminacao >= sucetivel_intervalo_cordenada_x - taxa_de_cotantaminacao and infectado_intervalo_cordernada_x - taxa_de_cotantaminacao <= sucetivel_intervalo_cordenada_x + taxa_de_cotantaminacao and infectado_intervalo_cordenada_y + taxa_de_cotantaminacao >= sucetivel_intervalo_cordenada_y - taxa_de_cotantaminacao and infectado_intervalo_cordenada_y - taxa_de_cotantaminacao <=sucetivel_intervalo_cordenada_y + taxa_de_cotantaminacao:
                     cor_transmisor_virus = populacao_infectada[i].color()
                     cor_receptor_virus = populacao_sucetivel_a_infeccao[j].color()
-                    if chance_de_ser_infectado > 7 and cor_transmisor_virus == ("red", "red") and  cor_receptor_virus == ("green", "green"):
+                    if chance_de_ser_infectado > 3 and cor_transmisor_virus == ("red", "red") and  cor_receptor_virus == ("green", "green"):
                         populacao_sucetivel_a_infeccao[j].color('red')    
                     # sprint(populacao_sucetivel_a_infeccao[j].color())                    
                 j += 1
@@ -229,7 +229,7 @@ class SucetivelInfeccao(Populacao):
                     
                     cor_transmisor_virus = populacao_sucetivel_a_infeccao[i].color()
                     cor_receptor_virus = populacao_sucetivel_a_infeccao[j].color()
-                    if chance_de_ser_infectado > 7 and  cor_receptor_virus == ("green", "green") and cor_transmisor_virus == ("red", "red"):
+                    if chance_de_ser_infectado > 4 and  cor_receptor_virus == ("green", "green") and cor_transmisor_virus == ("red", "red"):
                        populacao_sucetivel_a_infeccao[j].color('red')                       
                 j += 1
             x += 1 
@@ -269,7 +269,7 @@ weeks = 0
 sucetiveis_a_doença.cria_individuo(190, 'sucetivel_a_doença')
 infectados.cria_individuo(10, 'infectado')
 
-while weeks<300:
+while weeks<200:
 
     sucetiveis_a_doença.movimenta_individuo()
     sucetiveis_a_doença.limita_bordas()
