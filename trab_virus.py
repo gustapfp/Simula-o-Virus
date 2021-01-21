@@ -65,15 +65,6 @@ class Populacao:
             self.controla_status[i]['dias_imune'] = 0
             self.controla_status[i]['dias_infectado'] = 0
 
-            # # 1 = imune
-            # # 2 = Sucetivel a doença
-            # # 3 = doente
-            # if str(tipo) == 'sucetivel_a_doença':
-            #     self.controla_status[i]['estado'] = 1 # 1 = imune
-           
-
-            # else:
-            #     self.controla_status[i]['estado'] = 3 # 3 = doente
         turtle.update()
         turtle.tracer(10)
         return self.__grupo, self.controla_status
@@ -130,12 +121,14 @@ class Populacao:
                 self.controla_status[i]['dias_imune'] = 0 
                 self.__grupo[i].color('green')     
                 
-                print('Perdeu imunidade')
-            
             # SE FICOU CURADO DA DONEÇA
 
             if cor_do_individuo == ("red", "red"): 
                 self.controla_status[i]['dias_infectado'] += 1
+                # SE ELE MORREU INFECTADO
+                chance_de_morrer_infectado = randint(0, 100)
+                if chance_de_morrer_infectado > 95:
+                    self.__grupo[i].ht()
 
             if self.controla_status[i]['dias_infectado']  > 75 and  cor_do_individuo == ("red", "red"):
                  self.controla_status[i]['dias_infectado'] = 0
@@ -276,7 +269,7 @@ weeks = 0
 sucetiveis_a_doença.cria_individuo(190, 'sucetivel_a_doença')
 infectados.cria_individuo(10, 'infectado')
 
-while weeks<100:
+while weeks<300:
 
     sucetiveis_a_doença.movimenta_individuo()
     sucetiveis_a_doença.limita_bordas()
@@ -290,7 +283,5 @@ while weeks<100:
     infectados.check_estado_do_individuo()
     
     weeks += 1
-    #print(f'semana: {weeks}')
-    # if weeks < len(populacao_infectada):
-    #     print(f"status: {controle_de_status_infectado[weeks]['estado']} ")
+
    
