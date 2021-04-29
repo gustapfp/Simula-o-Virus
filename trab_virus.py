@@ -67,7 +67,7 @@ class Populacao:
 
         turtle.update()
         turtle.tracer(10)
-        return self.__grupo, self.controla_status
+        return self.grupo(), self.controla_status
     
     def movimenta_individuo(self):
         """
@@ -256,32 +256,31 @@ class Simulacao:
         self.__modulo.screensize(tamanhox, tamanhoy)
         self.__modulo.bgcolor((str(cor_da_tela)))
     
+if __name__ == "__main__":
+    simulacao_virus = Simulacao(turtle)
+        
+    simulacao_virus.tela_da_simulacao(600, 400, 'black')
 
-simulacao_virus = Simulacao(turtle)
-    
-simulacao_virus.tela_da_simulacao(600, 400, 'black')
+    infectados = Doentes(10, populacao_infectada, controle_de_status_infectado)
+    sucetiveis_a_doença = SucetivelInfeccao(190, populacao_sucetivel_a_infeccao, controle_de_status_sucetivel)
 
-infectados = Doentes(10, populacao_infectada, controle_de_status_infectado)
-sucetiveis_a_doença = SucetivelInfeccao(190, populacao_sucetivel_a_infeccao, controle_de_status_sucetivel)
+    # 
+    weeks = 0
+    sucetiveis_a_doença.cria_individuo(190, 'sucetivel_a_doença')
+    infectados.cria_individuo(10, 'infectado')
 
-# 
-weeks = 0
-sucetiveis_a_doença.cria_individuo(190, 'sucetivel_a_doença')
-infectados.cria_individuo(10, 'infectado')
+    while weeks<200:
 
-while weeks<200:
+        sucetiveis_a_doença.movimenta_individuo()
+        sucetiveis_a_doença.limita_bordas()
+        sucetiveis_a_doença.nasce_novo_individuo()
+        sucetiveis_a_doença.se_esta_infectado_infecta_outros(20)
+        sucetiveis_a_doença.check_estado_do_individuo()
 
-    sucetiveis_a_doença.movimenta_individuo()
-    sucetiveis_a_doença.limita_bordas()
-    sucetiveis_a_doença.nasce_novo_individuo()
-    sucetiveis_a_doença.se_esta_infectado_infecta_outros(20)
-    sucetiveis_a_doença.check_estado_do_individuo()
+        infectados.movimenta_individuo()
+        infectados.limita_bordas()
+        infectados.transmite_virus(20)
+        infectados.check_estado_do_individuo()
+        
+        weeks += 1
 
-    infectados.movimenta_individuo()
-    infectados.limita_bordas()
-    infectados.transmite_virus(20)
-    infectados.check_estado_do_individuo()
-    
-    weeks += 1
-
-   
